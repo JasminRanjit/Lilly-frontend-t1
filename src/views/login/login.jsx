@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AppHelper from "helpers/AppHelper.js";
+import { geolocated } from 'react-geolocated';
 import { connect } from 'react-redux';
 import { requestLogin, developerModeLogin } from 'actions';
 import Register from '../../components/register/register';
@@ -19,6 +20,10 @@ const userInfo = {
 }
 
 class Login extends Component {
+  componentDidMount() {
+    this.getMyLocation()
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -27,12 +32,31 @@ class Login extends Component {
       developerMode: false, // Change this to false to contact API
       error: false,
       errorMsg: '',
-      register: false
+      register: false,
+      latitude: '',
+      longitude: ''
     };
 
     this.handleRegister = this.handleRegister.bind(this);
+    this.getMyLocation = this.getMyLocation.bind(this)
   }
 
+
+  getMyLocation() {
+    const location = window.navigator && window.navigator.geolocation
+
+    if (location) {
+      location.getCurrentPosition((position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        })
+      }, (error) => {
+        this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
+      })
+    }
+
+  }
   errorMessage = () => {
     if (this.state.error) {
       return (
@@ -78,8 +102,8 @@ class Login extends Component {
         const userId = userInfo.data.userId;
         const userRole = userInfo.data.userRole;
         this.props.dispatchDeveloperModeLogin();
-        AppHelper.basicLoginUser(true, 'Developer', userRole, userId);
 
+        AppHelper.basicLoginUser(true, 'Developer', userRole, userId);
       } else {
         this.setState({
           error: true,
@@ -101,7 +125,7 @@ class Login extends Component {
         AppHelper.loginUser(true, accessToken);
       } */
       // Add token based auth. later - use basic auth now.
-      console.log(response)
+      console.log("---------------->",response.payload);
 
       if (response && response.payload && response.payload.data &&
         response.payload.data.statusCode === 200 &&
@@ -111,6 +135,7 @@ class Login extends Component {
         const userId = response.payload.data.data.userId;
         const userRole = response.payload.data.data.userRole;
         const name = response.payload.data.data.name;
+
         AppHelper.basicLoginUser(true, name, userRole, userId);
 
       } else {
@@ -192,6 +217,7 @@ class Login extends Component {
     }
   }
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {

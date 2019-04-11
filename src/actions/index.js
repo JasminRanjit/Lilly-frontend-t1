@@ -4,6 +4,7 @@ export const REQUEST_ACCESS_TOKEN_LOGIN = "REQUEST_ACCESS_TOKEN_LOGIN"
 export const SET_USER_ROLE = "SET_USER_ROLE"
 export const DEVELOPER_LOGIN = "DEVELOPER_LOGIN"
 
+
 export const requestLogin = (data) => ({
   type: REQUEST_LOGIN,
   payload: {
@@ -12,11 +13,13 @@ export const requestLogin = (data) => ({
       method: 'POST',
       data: {
         email: data.emailId,
-        password: data.password
+        password: data.password,
+        lat: data.latitude,
+        lng: data.longitude
       }
     }
   }
-})
+});
 
 export const requestAccessTokenLogin = (token) => ({
   type: REQUEST_ACCESS_TOKEN_LOGIN,

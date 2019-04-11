@@ -8,6 +8,7 @@ import SocketIOClient from 'socket.io-client';
 
 import AppHelper from "../../helpers/AppHelper.js";
 import botLogo from "../../images/lilybot.png";
+import Axios from 'axios';
 
 const Socket = SocketIOClient(process.env.REACT_APP_LILY_API_BASE_URL);
 
@@ -23,9 +24,18 @@ class LilyDialogInterface extends React.PureComponent {
         };
         this.socket = SocketIOClient(process.env.REACT_APP_LILY_API_BASE_URL);
     }
-
+  getNearbyPsychiatrists () {
+      Axios.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&key=AIzaSyBie281wSgsWeYYJ8kmQG8vcZWD-C2Le2w")
+        .then((result) => {
+          console.log("--------------->", result);
+        this.setState({
+          psy: result.data,
+          psyLoaded: true
+        })
+      })
+    }
     componentDidMount() {
-
+        this.getNearbyPsychiatrists()
         const { previousStep } = this.props;
 
         var messageObject = {
@@ -52,7 +62,7 @@ class LilyDialogInterface extends React.PureComponent {
     }
 
     render() {
-
+        console.log("*********",this.state.psy)
         return (
             <div>{this.state.lilyResponse}</div>
         )
