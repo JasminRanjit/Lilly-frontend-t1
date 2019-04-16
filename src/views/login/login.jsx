@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import AppHelper from "helpers/AppHelper.js";
-import { geolocated } from 'react-geolocated';
 import { connect } from 'react-redux';
 import { requestLogin, developerModeLogin } from 'actions';
 import Register from '../../components/register/register';
@@ -47,6 +46,8 @@ class Login extends Component {
 
     if (location) {
       location.getCurrentPosition((position) => {
+        window.localStorage.setItem("lat",position.coords.latitude);
+        window.localStorage.setItem("lng",position.coords.longitude);
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -125,8 +126,6 @@ class Login extends Component {
         AppHelper.loginUser(true, accessToken);
       } */
       // Add token based auth. later - use basic auth now.
-      console.log("---------------->",response.payload);
-
       if (response && response.payload && response.payload.data &&
         response.payload.data.statusCode === 200 &&
         response.payload.data.data && response.payload.data.data.userId) {
@@ -135,7 +134,6 @@ class Login extends Component {
         const userId = response.payload.data.data.userId;
         const userRole = response.payload.data.data.userRole;
         const name = response.payload.data.data.name;
-
         AppHelper.basicLoginUser(true, name, userRole, userId);
 
       } else {
