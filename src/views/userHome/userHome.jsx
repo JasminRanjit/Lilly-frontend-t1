@@ -3,6 +3,12 @@ import Card from '../../components/card/card';
 import M from 'materialize-css';
 import Chat from '../../components/chat/chat';
 import {ThemeProvider} from 'styled-components';
+import {
+  withScriptjs,
+  withGoogleMap,
+  GoogleMap,
+  Marker,
+} from "react-google-maps";
 
 import Modal from 'react-modal';
 import AppHelper from "helpers/AppHelper.js";
@@ -35,6 +41,19 @@ const theme = {
   userFontColor: '#4a4a4a',
 };
 
+const MapWithAMarker = withScriptjs(withGoogleMap(props =>
+  <GoogleMap
+    defaultZoom={8}
+    defaultCenter={{ lat:props.lat, lng:props.lng}}
+  >
+    {props.markers.map(marker => (
+      <Marker
+        position={{ lat: marker.lat, lng: marker.lng }}
+        key={marker.id}
+      />
+    ))}
+  </GoogleMap>
+));
 
 
 
@@ -60,13 +79,19 @@ class UserHome extends Component {
     console.log("getting");
     let conversationUrl = process.env.REACT_APP_LILY_API_BASE_URL + 'api/user/psyNearby';
     Axios.post(conversationUrl,{lat:window.localStorage.getItem("lat"),lng:window.localStorage.getItem("lng"),userId:AppHelper.getUserId()}).then((result) => {
-      console.log("got",result);
+
 
       const psyResults = result.data.data.map((res) =>
         <li>{res.name}</li>
       );
+      const latlngs = result.data.data.map((res) => {
+          return res.geometry.location;
+        }
+      );
+      console.log("got",latlngs);
       this.setState({
         psyResults: psyResults,
+        latlngs: latlngs,
 
       })
     })
@@ -128,8 +153,17 @@ class UserHome extends Component {
             contentLabel="Example Modal"
           >
             <h2 ref={subtitle => this.subtitle = subtitle} className="header">Nearby Clinics</h2>
-
+            <MapWithAMarker
+              markers={this.state.latlngs}
+              lat={ parseInt(window.localStorage.getItem("lat"))}
+              lng={ parseInt(window.localStorage.getItem("lng"))}
+              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBie281wSgsWeYYJ8kmQG8vcZWD-C2Le2w&v=3.exp&libraries=geometry,drawing,places"
+              loadingElement={<div style={{ height: `100%` }} />}
+              containerElement={<div style={{ height: `400px` }} />}
+              mapElement={<div style={{ height: `100%` }} />}
+            />
             { <ul>{this.state.psyResults}</ul>}
+
             <button onClick={this.closeModal}>close</button>
           </Modal>
         </div>
