@@ -6,11 +6,17 @@ import Users from '../../components/users-view/users-view';
 import Scores from '../../components/scores/scores';
 
 import Axios from 'axios';
+import DialogFlow from "../../components/dialogflow/dialogflow";
+import Entity from "../../components/dialogflow/entity";
+import Intent from "../../components/dialogflow/intent";
 
 const views = {
   DASHBOARD: 'DASHBOARD',
   USERS: 'USERS',
-  SCORES: 'SCORES'
+  SCORES: 'SCORES',
+  DIALOG: 'DIALOG',
+  INTENT: 'INTENT',
+  ENTITY: 'ENTITY'
 }
 
 class Home extends Component {
@@ -62,8 +68,14 @@ class Home extends Component {
         return <Users />
       case this.state.views.SCORES:
         return <Scores content={this.state.depResults} />
-      default:
+      case this.state.views.DASHBOARD:
         return <Dashboard content={this.state.depResults} />
+      case this.state.views.ENTITY:
+        return <Entity />
+      case this.state.views.INTENT:
+        return <Intent />
+      default:
+        return <DialogFlow />
     }
   }
 

@@ -29,6 +29,15 @@ class AdminSidenav extends Component {
             marginBottom: 'auto'
         }
 
+      let innerStyle = {
+        position: 'fixed',
+        zIndex: 1,
+        overflowX: 'hidden',
+        paddingTop: 'auto',
+        marginBottom: 'auto',
+        marginLeft: '10%'
+      }
+
         return (
             <div className="container left-align">
                 <ul className="no-autoinit sidenav sidenav-fixed grey darken-3" style={style} ref={(sidenav) => { this.sidenav = sidenav }}>
@@ -49,12 +58,32 @@ class AdminSidenav extends Component {
                             <i className={this.props.currentView === this.props.views.USERS ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>person</i>Users
                         </a>
                     </li>
+                  <li>
+                    <a href="#!" className={this.props.currentView === this.props.views.SCORES ? "waves-effect white-text" : "waves-effect grey-text text-darken-1"}
+                       onClick={() => { this.props.onClick(this.props.views.SCORES) }}>
+                      <i className={this.props.currentView === this.props.views.SCORES ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>info</i>Scores
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#!" className={(this.props.currentView === this.props.views.DIALOG || this.props.currentView === this.props.views.INTENT || this.props.currentView === this.props.views.ENTITY)  ? "waves-effect white-text" : "waves-effect grey-text text-darken-1"}
+                       onClick={() => { this.props.onClick(this.props.views.DIALOG) }}>
+                      <i className={(this.props.currentView === this.props.views.DIALOG || this.props.currentView === this.props.views.INTENT || this.props.currentView === this.props.views.ENTITY) ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>assessment</i>DialogFlow
+                    </a>
+                  </li>
+                  <ul className="no-autoinit" style={innerStyle} ref={(sidenav) => { this.sidenav = sidenav }}>
                     <li>
-                        <a href="#!" className={this.props.currentView === this.props.views.SCORES ? "waves-effect white-text" : "waves-effect grey-text text-darken-1"}
-                            onClick={() => { this.props.onClick(this.props.views.SCORES) }}>
-                            <i className={this.props.currentView === this.props.views.SCORES ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>info</i>Scores
-                        </a>
+                      <a href="#!" className={this.props.currentView === this.props.views.INTENT ? "waves-effect white-text" : "waves-effect grey-text text-darken-1"}
+                         onClick={() => { this.props.onClick(this.props.views.INTENT) }}>
+                        <i className={this.props.currentView === this.props.views.INTENT ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>chat</i>Intents
+                      </a>
                     </li>
+                    <li>
+                      <a href="#!" className={this.props.currentView === this.props.views.ENTITY ? "waves-effect white-text" : "waves-effect grey-text text-darken-1"}
+                         onClick={() => { this.props.onClick(this.props.views.ENTITY) }}>
+                        <i className={this.props.currentView === this.props.views.ENTITY ? "material-icons white-text" : "material-icons grey-text text-darken-1"}>blur_on</i>Entities
+                      </a>
+                    </li>
+                  </ul>
                 </ul>
                 {this.props.children}
             </div>
