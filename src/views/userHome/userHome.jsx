@@ -21,12 +21,17 @@ const customStyles = {
   content : {
     top                   : '50%',
     left                  : '50%',
+
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)'
-  }
+
+  },
+  zIndex                : 999999
+
 };
+
 
 // Chat theme
 const theme = {
@@ -76,7 +81,6 @@ class UserHome extends Component {
   }
 
   getPsyResults() {
-    console.log("getting");
     let conversationUrl = process.env.REACT_APP_LILY_API_BASE_URL + 'api/user/psyNearby';
     Axios.post(conversationUrl,{lat:window.localStorage.getItem("lat"),lng:window.localStorage.getItem("lng"),userId:AppHelper.getUserId()}).then((result) => {
 
@@ -143,14 +147,14 @@ class UserHome extends Component {
           </div>
         </div>
         <div>
-          {(this.state.psyResults && this.state.psyResults.length > 0)? <button className="waves-effect waves-light cyan btn" onClick={this.openModal}>Nearby Clinics</button>: null}
+          {(this.state.psyResults && this.state.psyResults.length > 0)? <button  className=" waves-light cyan btn" onClick={this.openModal}>Nearby Clinics</button>: null}
 
           <Modal
             isOpen={this.state.modalIsOpen}
             onAfterOpen={this.afterOpenModal}
             onRequestClose={this.closeModal}
             style={customStyles}
-            contentLabel="Example Modal"
+            contentLabel="Nearby Clinics"
           >
             <h2 ref={subtitle => this.subtitle = subtitle} className="header">Nearby Clinics</h2>
             <MapWithAMarker
@@ -159,7 +163,7 @@ class UserHome extends Component {
               lng={ parseInt(window.localStorage.getItem("lng"))}
               googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBie281wSgsWeYYJ8kmQG8vcZWD-C2Le2w&v=3.exp&libraries=geometry,drawing,places"
               loadingElement={<div style={{ height: `100%` }} />}
-              containerElement={<div style={{ height: `400px` }} />}
+              containerElement={<div style={{ height: `400px`, zIndex:99 }} />}
               mapElement={<div style={{ height: `100%` }} />}
             />
             { <ul>{this.state.psyResults}</ul>}
