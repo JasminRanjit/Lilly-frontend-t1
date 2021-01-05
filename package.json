@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "cfenv": "1.0.x",
     "chart.js": "^2.7.3",
     "material-icons": "^0.2.3",
